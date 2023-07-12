@@ -4,10 +4,12 @@ namespace ProjectR.Domain.Entities;
 
 public sealed class Thread : Entity
 {
-    public Thread(Guid id, Guid userId, Guid epicId) : base(id)
+    public Thread(Guid id, Guid userId, Guid epicId, string title, string content) : base(id)
     {
         UserId = userId;
         EpicId = epicId;
+        Title = title;
+        Content = content;
     }
 
     private Thread(Guid id) : base(id)
@@ -15,11 +17,13 @@ public sealed class Thread : Entity
 
     }
 
-    string Name { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
 
-    Guid EpicId { get; set; }
+    public string Content { get; set; } = string.Empty;
 
-    Guid UserId { get; set; }
+    public Guid EpicId { get; set; }
+
+    public Guid UserId { get; set; }
 
     public User User { get; set; }
 

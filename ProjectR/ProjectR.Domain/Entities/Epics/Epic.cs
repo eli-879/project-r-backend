@@ -14,4 +14,6 @@ public sealed class Epic : Entity
     public string Description { get; set; } = String.Empty;
 
     public ICollection<User> Users { get; set; } = new HashSet<User>();
+
+    public ICollection<Thread> Threads { get; set; } = new HashSet<Thread>();
 }

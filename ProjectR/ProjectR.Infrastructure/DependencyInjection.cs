@@ -14,6 +14,7 @@ namespace ProjectR.Infrastructure
         {
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IEpicRepository, EpicRepository>();
+            services.AddTransient<IThreadRepository, ThreadRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IApplicationDbContext, ApplicationDbContext>();
             services.AddTransient<IJwtProvider, JwtProvider>();

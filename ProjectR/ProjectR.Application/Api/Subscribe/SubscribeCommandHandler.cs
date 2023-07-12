@@ -1,5 +1,6 @@
 ﻿using ProjectR.Application.Abstractions.Messaging;
 using ProjectR.Domain.Abstractions;
+using ProjectR.Domain.Enums;
 using ProjectR.Domain.Errors;
 using ProjectR.Domain.Shared;
 
@@ -23,7 +24,7 @@ public class SubscribeCommandHandler : ICommandHandler<SubscribeCommand>
 
         if (!isUserIdValid)
         {
-            return Result.Failure(new Error("a", "A"));
+            return Result.Failure(DomainErrors.User.UserIdIsNotValid(request.userId));
         }
 
         var epic = await _epicRepository.GetEpicByIdAsync(request.requestDto.epicId);
@@ -40,7 +41,21 @@ public class SubscribeCommandHandler : ICommandHandler<SubscribeCommand>
             return Result.Failure(DomainErrors.User.UserIdNotFound(parsedUserId));
         }
 
-        epic.Users.Add(user);
+        switch (request.requestDto.action)
+        {
+            case SubscribeActionsEnum.Sub:
+                epic.Users.Add(user);
+                break;
+
+            case SubscribeActionsEnum.Unsub:
+                epic.Users.Remove(user);
+                break;
+
+            default:
+                return Result.Failure(new Error("a", "A"));
+        }
+
+
 
         await _unitOfWork.SaveChangesAsync();
 

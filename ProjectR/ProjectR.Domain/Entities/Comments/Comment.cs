@@ -10,7 +10,6 @@ public sealed class Comment : Entity
 
     public string Message { get; set; } = string.Empty;
 
-    [ForeignKey("ParentId")]
     public Comment Parent { get; set; }
     public Guid? ParentId { get; set; }
 

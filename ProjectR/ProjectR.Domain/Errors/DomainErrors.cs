@@ -15,6 +15,11 @@ public static class DomainErrors
             return new Error("User.UsernameNotFound", $"User with the username: {username} was not found");
         }
 
+        public static Error UserIdIsNotValid(string id)
+        {
+            return new Error("User.UseIdNotValid", $"UserId: {id} was not a valid Id");
+        }
+
 
     }
 

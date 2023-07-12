@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ProjectR.Application.Api.Subscribe;
@@ -20,7 +21,8 @@ public class ApiController : ControllerBase
         _sender = sender;
     }
 
-    [HttpPost]
+    [Authorize]
+    [HttpPost("/subscribe")]
     public async Task<ActionResult> Subscribe([FromBody] SubscribeRequestDto subscribeRequestDto)
     {
         var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -32,11 +34,7 @@ public class ApiController : ControllerBase
 
         Result epicUserResult = await _sender.Send(new SubscribeCommand(subscribeRequestDto, userId));
 
-        if (epicUserResult.IsFailure)
-        {
-            return BadRequest();
-        }
+        return epicUserResult.IsSuccess ? StatusCode(201) : BadRequest(epicUserResult.Error);
 
-        return Ok();
     }
 }

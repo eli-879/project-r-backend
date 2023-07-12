@@ -23,8 +23,7 @@ public sealed class User : Entity
 
     public DateTime CreatedAt { get; private set; }
 
-    public ICollection<Thread> Threads { get; private set; }
-    public ICollection<Comment> Comments { get; private set; }
-
-    public ICollection<Epic> Epics { get; private set; }
+    public ICollection<Thread> Threads { get; private set; } = new HashSet<Thread>();
+    public ICollection<Comment> Comments { get; private set; } = new HashSet<Comment>();
+    public ICollection<Epic> Epics { get; private set; } = new HashSet<Epic>();
 }
