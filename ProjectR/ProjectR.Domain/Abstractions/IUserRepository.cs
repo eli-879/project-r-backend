@@ -1,15 +1,13 @@
 ﻿using ProjectR.Domain.Entities;
 
-namespace ProjectR.Domain.Abstractions
+namespace ProjectR.Domain.Abstractions;
+public interface IUserRepository
 {
-    public interface IUserRepository
-    {
 
-        Task<User?> GetUserByIdAsync(Guid id);
+    Task<User?> GetUserByIdAsync(Guid id);
 
-        Task<User?> GetUserByUsernameAsync(string name);
-        void InsertUser(User user);
+    Task<User?> GetUserByUsernameAsync(string name);
+    void InsertUser(User user);
 
-        void DeleteUser(User user);
-    }
+    void DeleteUser(User user);
 }

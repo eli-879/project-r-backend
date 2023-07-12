@@ -1,39 +1,37 @@
-﻿using MediatR;
-using ProjectR.Application.Abstractions;
+﻿using ProjectR.Application.Abstractions;
+using ProjectR.Application.Abstractions.Messaging;
 using ProjectR.Domain.Abstractions;
-using ProjectR.Domain.Exceptions;
+using ProjectR.Domain.Errors;
+using ProjectR.Domain.Shared;
 
-namespace ProjectR.Application.Users.Login
+namespace ProjectR.Application.Users.Login;
+
+internal sealed class LoginQueryHandler : IQueryHandler<LoginQuery, JWTResponseDto>
 {
-    public sealed class LoginQueryHandler : IRequestHandler<LoginQuery, JWTResponseDto>
+    private readonly IUserRepository _userRepository;
+    private readonly IJwtProvider _jwtProvider;
+
+    public LoginQueryHandler(IUserRepository userRepository, IJwtProvider jwtProvider)
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IJwtProvider _jwtProvider;
+        _userRepository = userRepository;
+        _jwtProvider = jwtProvider;
+    }
+    public async Task<Result<JWTResponseDto>> Handle(LoginQuery request, CancellationToken cancellationToken)
+    {
+        // get user
+        var user = await _userRepository.GetUserByUsernameAsync(request.username);
 
-        public LoginQueryHandler(IUserRepository userRepository, IJwtProvider jwtProvider)
+        if (user is null)
         {
-            _userRepository = userRepository;
-            _jwtProvider = jwtProvider;
+            return Result.Failure<JWTResponseDto>(DomainErrors.User.UserUsernameNotFound(request.username));
         }
-        public async Task<JWTResponseDto> Handle(LoginQuery request, CancellationToken cancellationToken)
-        {
-            // get user
-            var user = await _userRepository.GetUserByUsernameAsync(request.username);
 
-            if (user == null)
-            {
-                throw new UserNotFoundException(request.username);
-            }
+        // generate JWT token
 
-            // generate JWT token
+        var token = _jwtProvider.GenerateToken(user);
 
-            var token = _jwtProvider.GenerateToken(user);
+        // return JWT token
 
-            // return JWT token
-
-            return new JWTResponseDto(token);
-
-
-        }
+        return new JWTResponseDto(token);
     }
 }

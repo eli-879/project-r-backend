@@ -22,6 +22,86 @@ namespace ProjectR.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("EpicUser", b =>
+                {
+                    b.Property<Guid>("EpicsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("EpicsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("EpicUser");
+                });
+
+            modelBuilder.Entity("ProjectR.Domain.Entities.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("ProjectR.Domain.Entities.Epic", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Epics");
+                });
+
+            modelBuilder.Entity("ProjectR.Domain.Entities.Thread", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EpicId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EpicId1");
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("Threads");
+                });
+
             modelBuilder.Entity("ProjectR.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -46,6 +126,62 @@ namespace ProjectR.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("EpicUser", b =>
+                {
+                    b.HasOne("ProjectR.Domain.Entities.Epic", null)
+                        .WithMany()
+                        .HasForeignKey("EpicsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProjectR.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ProjectR.Domain.Entities.Comment", b =>
+                {
+                    b.HasOne("ProjectR.Domain.Entities.Comment", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId");
+
+                    b.HasOne("ProjectR.Domain.Entities.User", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("ProjectR.Domain.Entities.Thread", b =>
+                {
+                    b.HasOne("ProjectR.Domain.Entities.Epic", "Epic")
+                        .WithMany()
+                        .HasForeignKey("EpicId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProjectR.Domain.Entities.User", "User")
+                        .WithMany("Threads")
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Epic");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ProjectR.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Threads");
                 });
 #pragma warning restore 612, 618
         }

@@ -31,8 +31,6 @@ namespace ProjectR.Infrastructure.Authentication
                 SecurityAlgorithms.HmacSha256
                 );
 
-
-
             var token = new JwtSecurityToken(
                 _options.Issuer,
                 _options.Audience,

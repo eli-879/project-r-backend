@@ -13,6 +13,7 @@ namespace ProjectR.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IEpicRepository, EpicRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IApplicationDbContext, ApplicationDbContext>();
             services.AddTransient<IJwtProvider, JwtProvider>();

@@ -1,32 +1,34 @@
-﻿using MediatR;
+﻿using ProjectR.Application.Abstractions.Messaging;
 using ProjectR.Domain.Abstractions;
-using ProjectR.Domain.Exceptions;
+using ProjectR.Domain.Errors;
+using ProjectR.Domain.Shared;
 
-namespace ProjectR.Application.Users.Delete
+namespace ProjectR.Application.Users.Delete;
+
+internal sealed class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand>
 {
-    internal sealed class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
+    private readonly IUserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public DeleteUserCommandHandler(IUserRepository repository, IUnitOfWork unitOfWork)
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        _userRepository = repository;
+        _unitOfWork = unitOfWork;
+    }
 
-        public DeleteUserCommandHandler(IUserRepository repository, IUnitOfWork unitOfWork)
+    public async Task<Result> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+    {
+        var user = await _userRepository.GetUserByIdAsync(request.UserId);
+
+        if (user is null)
         {
-            _userRepository = repository;
-            _unitOfWork = unitOfWork;
+            return Result.Failure(DomainErrors.User.UserIdNotFound(request.UserId));
         }
 
-        public async Task Handle(DeleteUserCommand request, CancellationToken cancellationToken)
-        {
-            var user = await _userRepository.GetUserByIdAsync(request.UserId);
+        _userRepository.DeleteUser(user);
 
-            if (user is null)
-            {
-                throw new UserNotFoundException(request.UserId);
-            }
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            _userRepository.DeleteUser(user);
-
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-        }
+        return Result.Success();
     }
 }
