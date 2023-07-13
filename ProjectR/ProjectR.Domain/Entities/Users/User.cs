@@ -12,6 +12,7 @@ public sealed class User : Entity
         Password = password;
         Email = email;
         CreatedAt = createdAt;
+
     }
 
     [Index(IsUnique = true)]
@@ -23,7 +24,13 @@ public sealed class User : Entity
 
     public DateTime CreatedAt { get; private set; }
 
-    public ICollection<Thread> Threads { get; private set; } = new HashSet<Thread>();
-    public ICollection<Comment> Comments { get; private set; } = new HashSet<Comment>();
-    public ICollection<Epic> Epics { get; private set; } = new HashSet<Epic>();
+    public ICollection<Thread> Threads { get; private set; } = new List<Thread>();
+    public ICollection<Comment> Comments { get; private set; } = new List<Comment>();
+    public ICollection<Epic> Epics { get; private set; } = new List<Epic>();
+
+
+    public void AddComment(Comment c)
+    {
+        Comments.Add(c);
+    }
 }

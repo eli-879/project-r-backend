@@ -5,7 +5,7 @@
 namespace ProjectR.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class threadUpdate : Migration
+    public partial class commentUpdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

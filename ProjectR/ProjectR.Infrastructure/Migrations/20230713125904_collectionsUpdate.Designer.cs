@@ -12,8 +12,8 @@ using ProjectR.Infrastructure;
 namespace ProjectR.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230712120759_threadUpdate")]
-    partial class threadUpdate
+    [Migration("20230713125904_collectionsUpdate")]
+    partial class collectionsUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,19 +46,27 @@ namespace ProjectR.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CommentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ParentId")
+                    b.Property<Guid>("ThreadId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentId");
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("ThreadId");
 
                     b.HasIndex("UserId");
 
@@ -90,17 +98,25 @@ namespace ProjectR.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("EpicId1")
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("EpicId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId1")
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EpicId1");
+                    b.HasIndex("EpicId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Threads");
                 });
@@ -148,30 +164,36 @@ namespace ProjectR.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectR.Domain.Entities.Comment", b =>
                 {
-                    b.HasOne("ProjectR.Domain.Entities.Comment", "Parent")
-                        .WithMany()
-                        .HasForeignKey("ParentId");
+                    b.HasOne("ProjectR.Domain.Entities.Comment", null)
+                        .WithMany("ChildComments")
+                        .HasForeignKey("CommentId");
 
-                    b.HasOne("ProjectR.Domain.Entities.User", null)
+                    b.HasOne("ProjectR.Domain.Entities.Thread", "Thread")
                         .WithMany("Comments")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("ThreadId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Parent");
+                    b.HasOne("ProjectR.Domain.Entities.User", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Thread");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProjectR.Domain.Entities.Thread", b =>
                 {
                     b.HasOne("ProjectR.Domain.Entities.Epic", "Epic")
                         .WithMany("Threads")
-                        .HasForeignKey("EpicId1")
+                        .HasForeignKey("EpicId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ProjectR.Domain.Entities.User", "User")
                         .WithMany("Threads")
-                        .HasForeignKey("UserId1")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -180,9 +202,19 @@ namespace ProjectR.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ProjectR.Domain.Entities.Comment", b =>
+                {
+                    b.Navigation("ChildComments");
+                });
+
             modelBuilder.Entity("ProjectR.Domain.Entities.Epic", b =>
                 {
                     b.Navigation("Threads");
+                });
+
+            modelBuilder.Entity("ProjectR.Domain.Entities.Thread", b =>
+                {
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("ProjectR.Domain.Entities.User", b =>

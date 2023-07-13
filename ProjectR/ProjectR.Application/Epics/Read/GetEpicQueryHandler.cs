@@ -7,12 +7,11 @@ namespace ProjectR.Application.Epics.Read;
 internal class GetEpicQueryHandler : IQueryHandler<GetEpicQuery, EpicResponseDto>
 {
     private readonly IEpicRepository _epicRepository;
-    private readonly IUnitOfWork _unitOfWork;
 
-    public GetEpicQueryHandler(IEpicRepository epicRepository, IUnitOfWork unitOfWork)
+    public GetEpicQueryHandler(IEpicRepository epicRepository)
     {
         _epicRepository = epicRepository;
-        _unitOfWork = unitOfWork;
+
     }
 
     public async Task<Result<EpicResponseDto>> Handle(GetEpicQuery request, CancellationToken cancellationToken)

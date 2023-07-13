@@ -30,4 +30,20 @@ public static class DomainErrors
             return new Error("Epic.EpicIdNotFound", $"Epic with the Id: {id} was not found");
         }
     }
+
+    public static class Thread
+    {
+        public static Error ThreadIdNotFound(Guid id)
+        {
+            return new Error("Thread.ThreadIdNotFound", $"Thread with the Id: {id} was not found");
+        }
+    }
+
+    public static class Comment
+    {
+        public static Error CommentIdNotFound(Guid id)
+        {
+            return new Error("Comment.CommendIdNotFound", $"Comment with the Id: {id} was not found");
+        }
+    }
 }

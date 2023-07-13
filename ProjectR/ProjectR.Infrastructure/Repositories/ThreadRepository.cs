@@ -1,4 +1,5 @@
-﻿using ProjectR.Domain.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using ProjectR.Domain.Abstractions;
 
 namespace ProjectR.Infrastructure.Repositories;
 
@@ -9,6 +10,11 @@ public class ThreadRepository : IThreadRepository
     public ThreadRepository(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
+    }
+
+    public async Task<Domain.Entities.Thread?> GetThreadByIdAsync(Guid threadId)
+    {
+        return await _dbContext.Threads.FirstOrDefaultAsync(t => t.Id == threadId);
     }
 
     public void InsertThread(Domain.Entities.Thread thread)

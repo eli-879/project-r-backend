@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ProjectR.Application.Epics.AddThread;
 using ProjectR.Application.Epics.Create;
 using ProjectR.Application.Epics.Read;
+using ProjectR.Application.Threads.Create;
 using ProjectR.Domain.Shared;
 using System.Security.Claims;
 
@@ -30,6 +30,14 @@ public class EpicsController : ControllerBase
         return epicResult.IsSuccess ? Ok(epicResult.Value) : NotFound(epicResult.Error);
     }
 
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<EpicResponseDto>>> Get()
+    {
+        Result<IEnumerable<EpicResponseDto>> epicsResult = await _sender.Send(new GetAllEpicsQuery());
+
+        return epicsResult.IsSuccess ? Ok(epicsResult.Value) : NotFound(epicsResult.Error);
+    }
+
     [HttpPost]
     public async Task<ActionResult<CreateEpicResponseDto>> Post([FromBody] CreateEpicRequestDto request)
     {
@@ -39,7 +47,7 @@ public class EpicsController : ControllerBase
     }
 
     [HttpPost("/thread")]
-    public async Task<ActionResult<AddThreadResponseDto>> AddThread([FromBody] AddThreadRequestDto request)
+    public async Task<ActionResult<CreateThreadResponseDto>> AddThread([FromBody] CreateThreadRequestDto request)
     {
         var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -47,7 +55,7 @@ public class EpicsController : ControllerBase
         {
             return BadRequest();
         }
-        Result<AddThreadResponseDto> addThreadResult = await _sender.Send(new AddThreadCommand(request, userId));
+        Result<CreateThreadResponseDto> addThreadResult = await _sender.Send(new CreateThreadCommand(request, userId));
 
         return addThreadResult.IsSuccess ? StatusCode(201, addThreadResult.Value) : BadRequest(addThreadResult.Error);
     }

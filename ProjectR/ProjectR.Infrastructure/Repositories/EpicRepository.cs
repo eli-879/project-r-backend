@@ -2,6 +2,7 @@
 using ProjectR.Domain.Abstractions;
 using ProjectR.Domain.Entities;
 
+
 namespace ProjectR.Infrastructure.Repositories;
 
 public sealed class EpicRepository : IEpicRepository
@@ -14,6 +15,12 @@ public sealed class EpicRepository : IEpicRepository
     public void DeleteEpic(Epic epic)
     {
         _dbContext.Epics.Remove(epic);
+    }
+
+    public async Task<IEnumerable<Epic>> GetAllEpicsAsync()
+    {
+        IEnumerable<Epic> epics = await _dbContext.Epics.ToListAsync();
+        return epics;
     }
 
     public async Task<Epic?> GetEpicByIdAsync(Guid epicId)

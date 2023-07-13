@@ -17,9 +17,9 @@ public sealed class Thread : Entity
 
     }
 
-    public string Title { get; set; } = string.Empty;
+    public string Title { get; set; }
 
-    public string Content { get; set; } = string.Empty;
+    public string Content { get; set; }
 
     public Guid EpicId { get; set; }
 
@@ -28,4 +28,13 @@ public sealed class Thread : Entity
     public User User { get; set; }
 
     public Epic Epic { get; set; }
+
+    public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
+    public void AddComment(Comment comment)
+    {
+        Comments.Add(comment);
+    }
+
+
 }

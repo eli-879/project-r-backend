@@ -7,13 +7,14 @@ public sealed class Epic : Entity
         : base(id)
     {
         Name = name;
+
     }
 
     public string Name { get; set; }
 
-    public string Description { get; set; } = String.Empty;
+    public string Description { get; set; }
 
-    public ICollection<User> Users { get; set; } = new HashSet<User>();
+    public ICollection<User> Users { get; set; } = new List<User>();
 
-    public ICollection<Thread> Threads { get; set; } = new HashSet<Thread>();
+    public ICollection<Thread> Threads { get; set; } = new List<Thread>();
 }

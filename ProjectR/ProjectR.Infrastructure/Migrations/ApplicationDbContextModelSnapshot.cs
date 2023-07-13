@@ -43,19 +43,27 @@ namespace ProjectR.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CommentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ParentId")
+                    b.Property<Guid>("ThreadId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentId");
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("ThreadId");
 
                     b.HasIndex("UserId");
 
@@ -153,17 +161,23 @@ namespace ProjectR.Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectR.Domain.Entities.Comment", b =>
                 {
-                    b.HasOne("ProjectR.Domain.Entities.Comment", "Parent")
-                        .WithMany()
-                        .HasForeignKey("ParentId");
+                    b.HasOne("ProjectR.Domain.Entities.Comment", null)
+                        .WithMany("ChildComments")
+                        .HasForeignKey("CommentId");
 
-                    b.HasOne("ProjectR.Domain.Entities.User", null)
+                    b.HasOne("ProjectR.Domain.Entities.Thread", "Thread")
                         .WithMany("Comments")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("ThreadId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Parent");
+                    b.HasOne("ProjectR.Domain.Entities.User", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Thread");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProjectR.Domain.Entities.Thread", b =>
@@ -185,9 +199,19 @@ namespace ProjectR.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ProjectR.Domain.Entities.Comment", b =>
+                {
+                    b.Navigation("ChildComments");
+                });
+
             modelBuilder.Entity("ProjectR.Domain.Entities.Epic", b =>
                 {
                     b.Navigation("Threads");
+                });
+
+            modelBuilder.Entity("ProjectR.Domain.Entities.Thread", b =>
+                {
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("ProjectR.Domain.Entities.User", b =>

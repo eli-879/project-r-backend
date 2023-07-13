@@ -1,17 +1,36 @@
 ﻿using ProjectR.Domain.Primitives;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectR.Domain.Entities;
 public sealed class Comment : Entity
 {
-    public Comment(Guid id) : base(id) { }
+    public Comment(Guid id, string message) : base(id)
+    {
+        Message = message;
+        CreatedAt = DateTime.Now;
 
-    public Guid UserId { get; set; }
+
+    }
+
+    public Guid? UserId { get; set; }
+
+    public User? User { get; set; }
+
+    public Guid ThreadId { get; set; }
+
+    public Thread Thread { get; set; }
 
     public string Message { get; set; } = string.Empty;
 
-    public Comment Parent { get; set; }
-    public Guid? ParentId { get; set; }
+    public ICollection<Comment> ChildComments { get; set; } = new List<Comment>();
+
+    public Guid? CommentId { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+
+    public void AddChildComment(Comment comment)
+    {
+        ChildComments.Add(comment);
+    }
 
 
 
