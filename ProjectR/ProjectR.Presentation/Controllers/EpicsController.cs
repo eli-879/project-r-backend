@@ -46,17 +46,5 @@ public class EpicsController : ControllerBase
         return epicResult.IsSuccess ? StatusCode(201, epicResult.Value) : BadRequest(epicResult.Error);
     }
 
-    [HttpPost("/thread")]
-    public async Task<ActionResult<CreateThreadResponseDto>> AddThread([FromBody] CreateThreadRequestDto request)
-    {
-        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (userId is null)
-        {
-            return BadRequest();
-        }
-        Result<CreateThreadResponseDto> addThreadResult = await _sender.Send(new CreateThreadCommand(request, userId));
-
-        return addThreadResult.IsSuccess ? StatusCode(201, addThreadResult.Value) : BadRequest(addThreadResult.Error);
-    }
 }

@@ -69,6 +69,7 @@ try
     builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
 
 
+
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("ApplicationDbContext"))
         );
@@ -83,6 +84,8 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
+
+    app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
     app.UseHttpsRedirection();
 

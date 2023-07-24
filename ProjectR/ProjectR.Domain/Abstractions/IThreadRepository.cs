@@ -6,5 +6,5 @@ public interface IThreadRepository
 
     Task<Entities.Thread?> GetThreadByIdAsync(Guid threadId);
 
-
+    Task<IEnumerable<Entities.Thread>> GetAllThreadsAsync();
 }

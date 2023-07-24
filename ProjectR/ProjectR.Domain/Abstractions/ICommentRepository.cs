@@ -8,5 +8,5 @@ public interface ICommentRepository
 
     Task<Comment?> GetCommentByIdAsync(Guid id);
 
-    Task<IEnumerable<Comment>> GetCommentsFromThreadAsync(Guid threadId);
+    Task<ICollection<Comment>> GetCommentsFromThreadAsync(Guid threadId);
 }

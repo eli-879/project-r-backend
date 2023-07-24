@@ -17,4 +17,8 @@
     <ProjectReference Include="..\ProjectR.Domain\ProjectR.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Threads\Read\GetThreadsByEpic\" />
+  </ItemGroup>
+
 </Project>

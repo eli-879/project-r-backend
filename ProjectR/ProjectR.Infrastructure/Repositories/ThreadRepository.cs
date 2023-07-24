@@ -12,6 +12,11 @@ public class ThreadRepository : IThreadRepository
         _dbContext = dbContext;
     }
 
+    public async Task<IEnumerable<Domain.Entities.Thread>> GetAllThreadsAsync()
+    {
+        return await _dbContext.Threads.ToListAsync();
+    }
+
     public async Task<Domain.Entities.Thread?> GetThreadByIdAsync(Guid threadId)
     {
         return await _dbContext.Threads.FirstOrDefaultAsync(t => t.Id == threadId);

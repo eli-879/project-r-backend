@@ -57,6 +57,11 @@ internal class CreateCommentCommandHandler : ICommandHandler<CreateCommentComman
             {
                 return Result.Failure<CreateCommentResponseDto>(DomainErrors.Comment.CommentIdNotFound(request.requestDto.threadId));
             }
+
+            if (commentParent.ThreadId != request.requestDto.threadId)
+            {
+                return Result.Failure<CreateCommentResponseDto>(DomainErrors.Comment.CommentNotInSameThread());
+            }
         }
 
         if (commentParent is not null)

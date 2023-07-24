@@ -43,7 +43,12 @@ public static class DomainErrors
     {
         public static Error CommentIdNotFound(Guid id)
         {
-            return new Error("Comment.CommendIdNotFound", $"Comment with the Id: {id} was not found");
+            return new Error("Comment.CommentIdNotFound", $"Comment with the Id: {id} was not found");
+        }
+
+        public static Error CommentNotInSameThread()
+        {
+            return new Error("Comment.CommentNotInSameThread", $"Comment parent not in same thread as current thread");
         }
     }
 }

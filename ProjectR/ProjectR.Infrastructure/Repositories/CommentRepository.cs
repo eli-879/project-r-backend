@@ -20,9 +20,9 @@ public class CommentRepository : ICommentRepository
 
     }
 
-    public async Task<IEnumerable<Comment>> GetCommentsFromThreadAsync(Guid threadId)
+    public async Task<ICollection<Comment>> GetCommentsFromThreadAsync(Guid threadId)
     {
-        IEnumerable<Comment> comments = await _dbContext.Comments
+        ICollection<Comment> comments = await _dbContext.Comments
                                                         .Include(c => c.User)
                                                         .Where(c => c.ThreadId == threadId)
                                                         .ToListAsync();
