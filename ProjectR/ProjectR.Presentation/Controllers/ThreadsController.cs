@@ -5,6 +5,7 @@ using ProjectR.Application.Threads.Create;
 using ProjectR.Application.Threads.Read.GetAllThreads;
 using ProjectR.Application.Threads.Read.GetAllThreadsPreview;
 using ProjectR.Application.Threads.Read.GetCommentsForThread;
+using ProjectR.Application.Threads.Read.GetContentForThread;
 using ProjectR.Domain.Shared;
 using System.Security.Claims;
 
@@ -23,11 +24,20 @@ public class ThreadsController : ControllerBase
         _sender = sender;
     }
 
-    [HttpGet("/thread/{threadId}")]
-    public async Task<ActionResult<IEnumerable<GetCommentsForThreadResponseDto>>> Get(Guid threadId)
+    [HttpGet("/thread/comments/{threadId}")]
+    public async Task<ActionResult<IEnumerable<GetCommentsForThreadResponseDto>>> GetComments(Guid threadId)
     {
         Result<IEnumerable<GetCommentsForThreadResponseDto>> result = await _sender.Send(new GetCommentsForThreadQuery(threadId));
         return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+    }
+
+    [HttpGet("/thread/content/{threadId}")]
+    public async Task<ActionResult<GetContentForThreadResponseDto>> GetContent(Guid threadId)
+    {
+        Result<GetContentForThreadResponseDto> result = await _sender.Send(new GetContentForThreadQuery(threadId));
+
+        return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+
     }
 
     [HttpPost("/thread")]

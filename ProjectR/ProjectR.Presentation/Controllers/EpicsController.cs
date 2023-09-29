@@ -22,10 +22,18 @@ public class EpicsController : ControllerBase
         _sender = sender;
     }
 
-    [HttpGet("{epicId}")]
+    /*[HttpGet("{epicId}")]
     public async Task<ActionResult<EpicResponseDto>> Get(Guid epicId)
     {
-        Result<EpicResponseDto> epicResult = await _sender.Send(new GetEpicQuery(epicId));
+        Result<EpicResponseDto> epicResult = await _sender.Send(new GetEpicByIdQuery(epicId));
+
+        return epicResult.IsSuccess ? Ok(epicResult.Value) : NotFound(epicResult.Error);
+    }*/
+
+    [HttpGet("{epicName}")]
+    public async Task<ActionResult<EpicResponseDto>> Get(string epicName)
+    {
+        Result<EpicResponseDto> epicResult = await _sender.Send(new GetEpicByNameQuery(epicName));
 
         return epicResult.IsSuccess ? Ok(epicResult.Value) : NotFound(epicResult.Error);
     }

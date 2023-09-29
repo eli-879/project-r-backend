@@ -29,6 +29,11 @@ public static class DomainErrors
         {
             return new Error("Epic.EpicIdNotFound", $"Epic with the Id: {id} was not found");
         }
+
+        public static Error EpicNameNotFound(string epicName)
+        {
+            return new Error("Epic.EpicNameNotFound", $"Epic with the name: {epicName} was not found");
+        }
     }
 
     public static class Thread

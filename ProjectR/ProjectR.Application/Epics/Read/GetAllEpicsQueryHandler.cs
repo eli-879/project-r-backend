@@ -17,7 +17,7 @@ internal class GetAllEpicsQueryHandler : IQueryHandler<GetAllEpicsQuery, IEnumer
     {
         IEnumerable<Epic> epics = await _epicRepository.GetAllEpicsAsync();
 
-        List<EpicResponseDto> e = epics.Select(epic => new EpicResponseDto(epic.Name)).ToList();
+        List<EpicResponseDto> e = epics.Select(epic => new EpicResponseDto(epic.Name, new List<ThreadDto>())).ToList();
 
         return e;
     }

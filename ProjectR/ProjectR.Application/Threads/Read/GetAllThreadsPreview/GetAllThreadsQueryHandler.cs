@@ -1,6 +1,5 @@
 ﻿using ProjectR.Application.Abstractions.Messaging;
 using ProjectR.Application.Threads.Read.GetAllThreads;
-using ProjectR.Domain;
 using ProjectR.Domain.Abstractions;
 using ProjectR.Domain.Entities;
 using ProjectR.Domain.Shared;

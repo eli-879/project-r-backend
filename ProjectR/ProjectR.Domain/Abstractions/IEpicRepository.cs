@@ -6,6 +6,8 @@ public interface IEpicRepository
 {
     Task<Epic?> GetEpicByIdAsync(Guid epicId);
 
+    Task<Epic?> GetEpicByNameAsync(string epicName);
+
     Task<IEnumerable<Epic>> GetAllEpicsAsync();
 
     void InsertEpic(Epic epic);

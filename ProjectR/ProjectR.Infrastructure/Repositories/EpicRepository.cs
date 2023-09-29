@@ -30,6 +30,15 @@ public sealed class EpicRepository : IEpicRepository
         return epic;
     }
 
+    public async Task<Epic?> GetEpicByNameAsync(string epicName)
+    {
+        var epic = await _dbContext.Epics
+                                    .Include(e => e.Threads)
+                                    .FirstOrDefaultAsync(e => e.Name == epicName);
+
+        return epic;
+    }
+
     public void InsertEpic(Epic epic)
     {
         _dbContext.Epics.Add(epic);

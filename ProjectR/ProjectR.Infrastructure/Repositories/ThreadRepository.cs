@@ -19,7 +19,7 @@ public class ThreadRepository : IThreadRepository
 
     public async Task<Domain.Entities.Thread?> GetThreadByIdAsync(Guid threadId)
     {
-        return await _dbContext.Threads.FirstOrDefaultAsync(t => t.Id == threadId);
+        return await _dbContext.Threads.Include(t => t.User).FirstOrDefaultAsync(t => t.Id == threadId);
     }
 
     public void InsertThread(Domain.Entities.Thread thread)

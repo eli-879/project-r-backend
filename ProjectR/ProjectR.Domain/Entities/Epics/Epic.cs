@@ -16,5 +16,5 @@ public sealed class Epic : Entity
 
     public ICollection<User> Users { get; set; } = new List<User>();
 
-    public ICollection<Thread> Threads { get; set; } = new List<Thread>();
+    public ICollection<Thread> Threads { get; } = new List<Thread>();
 }
